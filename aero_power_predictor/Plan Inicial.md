@@ -234,7 +234,7 @@ Usa Dagster para orquestar:
 **En cada fase debes entregar:**
 
 - Código completo
-- Explicación técnica
+- Añadir Explicación técnica en un .md llamado "Explicación técnica.md" sin eliminar las explicaciones anteriores
 - Decisiones de diseño
 - Posibles mejoras
 - Cómo probarlo
