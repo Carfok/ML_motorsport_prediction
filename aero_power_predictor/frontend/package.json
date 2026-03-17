@@ -1,0 +1,27 @@
+{
+  "name": "aero-power-predictor-ui",
+  "version": "2026.1.0",
+  "description": "Frontend para The 2026 Aero-Power Predictor",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^r128",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "eslint": "^8.54.0",
+    "eslint-config-next": "15.0.0"
+  }
+}

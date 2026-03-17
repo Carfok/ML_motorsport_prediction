@@ -1,0 +1,2 @@
+# Este archivo se crea para asegurar que el directorio existe en versiones git
+# DuckDB generará motores_2026.duckdb en este directorio al ejecutar Dagster

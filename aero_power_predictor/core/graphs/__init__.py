@@ -1,0 +1,1 @@
+"""Graph Neural Networks (GNN) para análisis de circuitos"""

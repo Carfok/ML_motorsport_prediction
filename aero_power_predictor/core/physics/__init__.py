@@ -1,0 +1,1 @@
+"""Physics-Informed Neural Networks (PINN) para Aerodinámica"""
