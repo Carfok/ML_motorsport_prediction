@@ -16,6 +16,3 @@ scheduler:
   module: dagster.core.scheduler
   class: DagsterDaemonScheduler
 
-data_storage:
-  sqlite:
-    base_dir: ./dagster_home/data_store
