@@ -11,6 +11,9 @@ class TelemetryPoint(BaseModel):
 class PredictRequest(BaseModel):
     circuit_id: str = Field(..., example="madrid-2026")
     driver_id: int = Field(..., example=14)
+    air_temperature: float = Field(25.0, description="Temperatura del aire en grados Celsius")
+    track_temperature: float = Field(35.0, description="Temperatura de la pista en grados Celsius")
+    humidity: float = Field(45.0, description="Porcentaje de humedad")
     telemetry_window: List[TelemetryPoint]
 
 class PredictionResponse(BaseModel):

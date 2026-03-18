@@ -1,4 +1,4 @@
-.PHONY: help install dev-install run-backend run-dagster run-frontend run-all clean test
+.PHONY: help install dev-install run-backend run-dagster run-frontend run-all clean test setup run-pipeline run-services run-full-system
 
 help:
 	@echo "🏎️ The 2026 Aero-Power Predictor — Development Commands"
@@ -35,10 +35,13 @@ run-frontend:
 	cd frontend && npm run dev
 
 run-all:
-	@echo "Starting backend, dagster, and frontend..."
-	python backend/main.py &
-	dagster dev -f data_pipeline/setup.py &
-	cd frontend && npm run dev &
+    @echo "🚀 Iniciando sistema completo..."
+    # Ingesta primero (bloqueante para asegurar datos)
+    python -m dagster asset materialize --select "*" -f data_pipeline/setup.py
+    # Backend en segundo plano (Sintaxis Windows compatible si se usa Git Bash)
+    (python backend/main.py &) 
+    # Frontend
+    cd frontend && npm run dev
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
@@ -54,3 +57,36 @@ test:
 lint:
 	black . --check
 	flake8 core/ backend/ data_pipeline/
+
+setup:
+    @echo "📦 Instalando dependencias de Python y Node..."
+    pip install -r requirements.txt
+    cd frontend && npm install
+    @echo "✅ Setup completado."
+
+# 2. Procesamiento de datos (Dagster)
+# Ejecuta la ingesta y creación del grafo antes de que los modelos puedan predecir
+run-pipeline:
+    @echo "🔄 Ejecutando Pipeline de Datos (Dagster)..."
+    dagster asset materialize --select "*" -f data_pipeline/setup.py
+
+# 3. Servicios de Inferencia y Backend
+# Nota: Triton debe estar corriendo (usualmente vía Docker)
+run-services:
+    @echo "🚀 Iniciando API Backend..."
+    python backend/main.py &
+
+# 4. Interfaz de Usuario
+run-ui:
+    @echo "🎨 Iniciando Frontend Next.js..."
+    cd frontend && npm run dev
+
+# 🔥 EL COMANDO MAESTRO
+# Este comando ejecuta todo en el orden lógico de creación
+dev:
+    @echo "🏁 Arrancando The 2026 Aero-Power Predictor..."
+    $(MAKE) run-pipeline
+    @sleep 5
+    $(MAKE) run-services &
+    @sleep 3
+    $(MAKE) run-ui

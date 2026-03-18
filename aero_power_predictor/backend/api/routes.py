@@ -1,8 +1,36 @@
+import duckdb
+import os
 from fastapi import APIRouter, HTTPException
 from backend.schemas.prediction import PredictRequest, PredictionResponse
 import random
 
 router = APIRouter()
+DB_PATH = "storage/db/f1_2026.duckdb"
+
+@router.get("/status/connection")
+async def check_connections():
+    """
+    Verifica la conexión con el storage (DuckDB) y la integridad de los datos.
+    """
+    try:
+        if not os.path.exists(DB_PATH):
+            return {"storage": "disconnected", "reason": "DuckDB file not found", "path": DB_PATH}
+        
+        conn = duckdb.connect(DB_PATH, read_only=True)
+        tables = conn.execute("SELECT table_name FROM information_schema.tables").fetchall()
+        row_count = 0
+        if ("telemetry",) in tables:
+            row_count = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+        conn.close()
+        
+        return {
+            "storage": "connected",
+            "database": "DuckDB",
+            "telemetry_rows": row_count,
+            "api_status": "online"
+        }
+    except Exception as e:
+        return {"storage": "error", "detail": str(e)}
 
 @router.post("/predict", response_model=PredictionResponse)
 async def perform_inference(request: PredictRequest):
