@@ -1,10 +1,20 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from backend.api import routes
 
 app = FastAPI(
     title="The 2026 Aero-Power Predictor API",
     description="Sistema de predicción de F1 en tiempo real basado en PINN, GNN, TFT y PointNet++",
     version="2.1.0"
+)
+
+# Configuración de CORS para permitir peticiones desde el frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En producción, especifica el dominio del frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Incluye los routers definidos

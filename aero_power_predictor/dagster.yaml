@@ -1,18 +1,3 @@
-run_launcher:
-  module: dagster.core.launcher
-  class: InProcessRunLauncher
-
-storage:
-  sqlite:
-    base_dir: ./dagster_home
-
-compute_logs:
-  module: dagster.core.storage.local_compute_log_manager
-  class: LocalComputeLogManager
-  config:
-    base_dir: ./dagster_home/logs
-
-scheduler:
-  module: dagster.core.scheduler
-  class: DagsterDaemonScheduler
-
+﻿run_launcher:
+  module: dagster._core.launcher
+  class: DefaultRunLauncher

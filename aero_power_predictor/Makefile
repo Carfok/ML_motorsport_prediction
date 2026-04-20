@@ -35,13 +35,13 @@ run-frontend:
 	cd frontend && npm run dev
 
 run-all:
-    @echo "🚀 Iniciando sistema completo..."
-    # Ingesta primero (bloqueante para asegurar datos)
-    python -m dagster asset materialize --select "*" -f data_pipeline/setup.py
-    # Backend en segundo plano (Sintaxis Windows compatible si se usa Git Bash)
-    (python backend/main.py &) 
-    # Frontend
-    cd frontend && npm run dev
+	@echo "🚀 Iniciando sistema completo..."
+	# Ingesta primero (bloqueante para asegurar datos)
+	python -m dagster asset materialize --select "*" -f data_pipeline/setup.py
+	# Backend
+	python backend/main.py &
+	# Frontend
+	cd frontend && npm run dev
 
 clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +

@@ -68,16 +68,24 @@ def telemetry_warehouse(clean_data: pd.DataFrame) -> Output[None]:
     """
     Persistencia columnar en DuckDB para acceso ultra-rápido por los modelos de IA.
     """
+    if clean_data.empty:
+        return Output(None, metadata={"message": MetadataValue.text("No data to insert")})
+
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     
     # Usamos DataFrame literal para la inserción
     conn = duckdb.connect(DB_PATH)
     
-    conn.execute("CREATE TABLE IF NOT EXISTS telemetry AS SELECT * FROM clean_data WHERE 1=0")
-    conn.execute("INSERT INTO telemetry SELECT * FROM clean_data")
-    
-    row_count = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
-    conn.close()
+    try:
+        # Registramos el DataFrame en la conexión de DuckDB para que sea visible en el SQL
+        conn.register("clean_data_df", clean_data)
+        
+        conn.execute("CREATE TABLE IF NOT EXISTS telemetry AS SELECT * FROM clean_data_df WHERE 1=0")
+        conn.execute("INSERT INTO telemetry SELECT * FROM clean_data_df")
+        
+        row_count = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+    finally:
+        conn.close()
     
     return Output(
         None,
