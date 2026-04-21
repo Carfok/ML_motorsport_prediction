@@ -18,7 +18,20 @@ class TelemetryPoint(BaseModel):
     brake: float = Field(..., ge=0, le=100, example=0.0, description="Presión del freno (%)")
     
     # Aerodinámica y Energía
-    drs: bool = Field(..., example=True, description="Estado del DRS abierto/cerrado")
+    active_aero: Literal["Z_MODE", "X_MODE"] = Field(
+        "Z_MODE", 
+        description="Z_MODE: Alta carga (curvas). X_MODE: Baja resistencia (rectas)"
+    )
+    
+    # Energía Híbrida MGU-K (Sustituye la táctica del DRS)
+    boost_active: bool = Field(
+        ..., 
+        description="Indica si el piloto está pulsando el botón de Boost estándar"
+    )
+    overtake_mode_active: bool = Field(
+        ..., 
+        description="Manual Override: Despliegue de los 0.5 MJ extra por estar a menos de 1s del rival"
+    )
     soc: float = Field(..., ge=0, le=100, example=85.0, description="Estado de carga de la batería (%)")
 
 # 2. Configuración y Estado del Coche (Nivel Macro)
