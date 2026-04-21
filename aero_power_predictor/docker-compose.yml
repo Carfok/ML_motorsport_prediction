@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Backend API (FastAPI)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    command: python backend/main.py
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - OPENF1_API_URL=https://api.openf1.org/v1
+      - DUCKDB_PATH=/app/storage/db/f1_2026.duckdb
+    depends_on:
+      - triton
+
+  # Data Pipeline (Dagster)
+  dagster:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    command: dagster dev -h 0.0.0.0 -p 3000 -f data_pipeline/setup.py
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - DAGSTER_HOME=/app/dagster_home
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+  # NVIDIA Triton Inference Server (Placeholder for deployment config)
+  triton:
+    image: nvcr.io/nvidia/tritonserver:24.03-py3
+    command: tritonserver --model-repository=/models
+    ports:
+      - "8001:8000"
+      - "8002:8001"
+      - "8003:8002"
+    volumes:
+      - ./triton_models:/models
+    # Note: GPU support should be added if running on a host with NVIDIA GPU
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
