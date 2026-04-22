@@ -17,21 +17,21 @@ BT
 14 TL
 (INFORME DEL PROYECTO - BRANCH main) Tj
 T*
-(Fecha de elaboración: 2026-04-22 14:50 UTC) Tj
+(Fecha de elaboracion: 2026-04-22 14:53 UTC) Tj
 T*
 (Repositorio: Carfok/ML_motorsport_prediction) Tj
 T*
-(Alcance: análisis funcional de apartados y fallos actuales por configuración o planificación de) Tj
+(Alcance: analisis funcional de apartados y fallos actuales por configuracion o planificacion de) Tj
 T*
-(código.) Tj
+(codigo.) Tj
 T*
 () Tj
 T*
 (1\) RESUMEN GENERAL) Tj
 T*
-(El proyecto 'aero_power_predictor' plantea una plataforma de predicción para motorsport con) Tj
+(El proyecto 'aero_power_predictor' plantea una plataforma de prediccion para motorsport con) Tj
 T*
-(backend FastAPI, pipeline de datos en Dagster, módulos de IA en PyTorch/PyG, almacenamiento DuckDB) Tj
+(backend FastAPI, pipeline de datos en Dagster, modulos de IA en PyTorch/PyG, almacenamiento DuckDB) Tj
 T*
 (y frontend Next.js.) Tj
 T*
@@ -43,37 +43,37 @@ T*
 T*
 (- backend/main.py: inicializa FastAPI, configura CORS, registra rutas bajo /api/v1 y publica) Tj
 T*
-(endpoint raíz de estado.) Tj
+(endpoint raiz de estado.) Tj
 T*
-(- backend/api/routes.py: expone endpoints de conectividad, predicción, grafo de circuito y) Tj
+(- backend/api/routes.py: expone endpoints de conectividad, prediccion, grafo de circuito y) Tj
 T*
-(análisis de equipo; integra llamadas HTTP externas y consultas DuckDB.) Tj
+(analisis de equipo; integra llamadas HTTP externas y consultas DuckDB.) Tj
 T*
-(- backend/schemas/prediction.py: define contratos de entrada/salida \(telemetría, estado del coche,) Tj
+(- backend/schemas/prediction.py: define contratos de entrada/salida \(telemetria, estado del coche,) Tj
 T*
 (clima y respuesta de inferencia\).) Tj
 T*
-(- backend/triton/client.py: cliente base para inferencia en Triton con métodos mock para) Tj
+(- backend/triton/client.py: cliente base para inferencia en Triton con metodos mock para) Tj
 T*
-(aero/energía/ranking.) Tj
+(aero/energia/ranking.) Tj
 T*
 () Tj
 T*
 (2.2 core/) Tj
 T*
-(- core/physics/pinn.py: modelo PINN simplificado para estimar Cd y Cl con componente de pérdida) Tj
+(- core/physics/pinn.py: modelo PINN simplificado para estimar Cd y Cl con componente de perdida) Tj
 T*
-(física.) Tj
+(fisica.) Tj
 T*
-(- core/graphs/builder.py: genera grafos sintéticos de circuito y reserva método para) Tj
+(- core/graphs/builder.py: genera grafos sinteticos de circuito y reserva metodo para) Tj
 T*
-(transformación real de telemetría a grafo.) Tj
+(transformacion real de telemetria a grafo.) Tj
 T*
 (- core/graphs/model.py: GNN \(GCNConv\) para extraer patrones espaciales y producir coeficiente de) Tj
 T*
 (rendimiento por nodo.) Tj
 T*
-(- core/energy/tft_model.py: esqueleto de TFT con LSTM + attention para predicción temporal del) Tj
+(- core/energy/tft_model.py: esqueleto de TFT con LSTM + attention para prediccion temporal del) Tj
 T*
 (SOC.) Tj
 T*
@@ -85,11 +85,11 @@ T*
 T*
 (2.3 data_pipeline/) Tj
 T*
-(- data_pipeline/assets/ingestion.py: assets Dagster para ingesta OpenF1, limpieza de telemetría y) Tj
+(- data_pipeline/assets/ingestion.py: assets Dagster para ingesta OpenF1, limpieza de telemetria y) Tj
 T*
 (persistencia en DuckDB.) Tj
 T*
-(- data_pipeline/setup.py: registra assets y define configuración de recursos del pipeline.) Tj
+(- data_pipeline/setup.py: registra assets y define configuracion de recursos del pipeline.) Tj
 T*
 (- data_pipeline/resources.py: recurso DuckDB por entorno \(dev/prod\) para ejecutar operaciones de) Tj
 T*
@@ -101,11 +101,11 @@ T*
 T*
 (- app/page.js y app/layout.js: punto de entrada de la UI en Next.js.) Tj
 T*
-(- components/Dashboard.js: panel principal para selección de circuito y disparo de predicción,) Tj
+(- components/Dashboard.js: panel principal para seleccion de circuito y disparo de prediccion,) Tj
 T*
-(renderizando métricas de salida.) Tj
+(renderizando metricas de salida.) Tj
 T*
-(- three/Circuit3D.js y three/Heatmap.js: base para visualización 3D y mapeo térmico de telemetría.) Tj
+(- three/Circuit3D.js y three/Heatmap.js: base para visualizacion 3D y mapeo termico de telemetria.) Tj
 T*
 (- package.json: scripts de desarrollo/build/lint del frontend.) Tj
 T*
@@ -117,7 +117,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 4 0 R >>
 endobj
 6 0 obj
-<< /Length 2406 >>
+<< /Length 2403 >>
 stream
 BT
 /F1 10 Tf
@@ -125,9 +125,9 @@ BT
 14 TL
 (2.5 Infraestructura y utilidades) Tj
 T*
-(- Makefile: comandos unificados de instalación, ejecución y validación.) Tj
+(- Makefile: comandos unificados de instalacion, ejecucion y validacion.) Tj
 T*
-(- docker-compose.yml: soporte de orquestación de servicios para entorno local \(según diseño del) Tj
+(- docker-compose.yml: soporte de orquestacion de servicios para entorno local \(segun diseno del) Tj
 T*
 (repositorio\).) Tj
 T*
@@ -145,11 +145,13 @@ T*
 T*
 (instaladas en entorno actual\).) Tj
 T*
-(- Importar módulos backend falla por dependencias Python no instaladas \(p.ej., fastapi/pydantic\).) Tj
+(- Importar modulos backend falla por dependencias Python no instaladas \(por ejemplo,) Tj
+T*
+(fastapi/pydantic\).) Tj
 T*
 () Tj
 T*
-(B. Fallos de planificación/integración detectados por revisión de código:) Tj
+(B. Fallos de planificacion/integracion detectados por revision de codigo:) Tj
 T*
 (- backend/schemas/prediction.py usa Literal sin importarlo desde typing, lo que rompe la carga del) Tj
 T*
@@ -157,25 +159,25 @@ T*
 T*
 (- Inconsistencia contrato API: PredictionResponse exige aero_efficiency y energy_usage, pero) Tj
 T*
-(/predict retorna battery_depletion_risk y no entrega esos campos; provocaría error de validación) Tj
+(/predict retorna battery_depletion_risk y no entrega esos campos; provocaria error de validacion) Tj
 T*
 (de respuesta.) Tj
 T*
-(- Inconsistencia frontend-backend en request: Dashboard envía) Tj
+(- Inconsistencia frontend-backend en request: Dashboard envia) Tj
 T*
 (air_temperature/track_temperature/humidity de forma plana, mientras el backend espera objetos) Tj
 T*
 (anidados weather y car_status.) Tj
 T*
-(- /predict asume telemetry_window con elementos y accede al último índice; Dashboard envía [] y) Tj
+(- /predict asume telemetry_window con elementos y accede al ultimo indice; Dashboard envia [] y) Tj
 T*
-(puede causar excepción de índice.) Tj
+(puede causar excepcion de indice.) Tj
 T*
 (- Inconsistencia frontend-backend en response: Dashboard intenta leer expected_ranking y) Tj
 T*
 (energy_usage.soc_at_finish, campos que no se construyen en la respuesta actual del backend.) Tj
 T*
-(- backend/triton/client.py usa TRITON_URL='localhost:8000', puerto que también usa FastAPI por) Tj
+(- backend/triton/client.py usa TRITON_URL='localhost:8000', puerto que tambien usa FastAPI por) Tj
 T*
 (defecto; existe riesgo de conflicto de puertos/servicio objetivo incorrecto.) Tj
 T*
@@ -183,11 +185,11 @@ T*
 T*
 (4\) CONCLUSION) Tj
 T*
-(El proyecto tiene una base modular clara y bien separada por dominios \(API, IA, pipeline y UI\),) Tj
+(El proyecto tiene una base modular clara y separada por dominios \(API, IA, pipeline y UI\), pero) Tj
 T*
-(pero actualmente presenta bloqueos de ejecución por configuración \(Makefile/dependencias\) y) Tj
+(presenta bloqueos de ejecucion por configuracion \(Makefile/dependencias\) y desalineacion de) Tj
 T*
-(desalineación de contratos entre frontend y backend que impiden una ejecución end-to-end estable.) Tj
+(contratos entre frontend y backend que impiden una ejecucion end-to-end estable.) Tj
 ET
 endstream
 endobj
@@ -203,9 +205,9 @@ xref
 0000000191 00000 n 
 0000002972 00000 n 
 0000003098 00000 n 
-0000005556 00000 n 
+0000005553 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-5682
+5679
 %%EOF
