@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict
 from datetime import datetime
+from typing import Dict, List, Literal, Optional
 
+from pydantic import BaseModel, Field
 # 1. Telemetría Enriquecida (Nivel Micro)
 class TelemetryPoint(BaseModel):
     # Contexto espacial y temporal
@@ -55,15 +55,15 @@ class PredictRequest(BaseModel):
     request_timestamp: datetime = Field(default_factory=datetime.utcnow)
     circuit_id: str = Field(..., example="madrid-2026")
     driver_id: int = Field(..., example=14)
-    session_type: str = Field(..., example="RACE", description="FP1, FP2, FP3, QUALY, RACE")
-    lap_number: int = Field(..., example=45)
+    session_type: str = Field("RACE", example="RACE", description="FP1, FP2, FP3, QUALY, RACE")
+    lap_number: int = Field(0, example=45)
     
     # Modelos anidados para mantener el JSON limpio
-    weather: WeatherConditions
-    car_status: CarStatus
+    weather: Optional[WeatherConditions] = None
+    car_status: Optional[CarStatus] = None
     
     # Telemetría en formato de serie temporal
-    telemetry_window: List[TelemetryPoint]
+    telemetry_window: List[TelemetryPoint] = Field(default_factory=list)
 
 # 5. Response Ampliado
 class PredictionResponse(BaseModel):
@@ -71,5 +71,6 @@ class PredictionResponse(BaseModel):
     predicted_lap_time: float = Field(..., example=82.345, description="Tiempo de vuelta predicho en segundos")
     tyre_degradation_score: float = Field(..., ge=0, le=1, description="Estimación de desgaste para la vuelta")
     aero_efficiency: Dict[str, float] = Field(..., example={"cd": 0.85, "cl": 2.45})
-    energy_usage: Dict[str, float] = Field(..., example={"soc_delta": -5.2})
+    energy_usage: Dict[str, float] = Field(..., example={"soc_at_finish": 0.78, "soc_delta": -5.2})
     sector_times: Dict[str, float] = Field(..., example={"sector_1": 28.5, "sector_2": 31.2, "sector_3": 22.6})
+    expected_ranking: List[int] = Field(default_factory=list, example=[14, 1, 16, 55, 63])
