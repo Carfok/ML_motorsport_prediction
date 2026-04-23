@@ -6,32 +6,80 @@ import axios from 'axios';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
 export default function PerformanceDashboard() {
-  const [circuit, setCircuit] = useState('madrid-2026');
+  const [circuit, setCircuit] = useState('');
   const [conditions, setConditions] = useState({
-    airTemp: 25,
-    trackTemp: 35,
-    humidity: 45
+    airTemp: 0,
+    trackTemp: 0,
+    humidity: 0
   });
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [circuits, setCircuits] = useState([]);
 
-  const circuits = [
-    { id: 'madrid-2026', name: 'Madrid Street Circuit (IFEMA)' },
-    { id: 'monaco-2026', name: 'Circuit de Monaco' },
-    { id: 'silverstone-2026', name: 'Silverstone Circuit' },
-    { id: 'interlagos-2026', name: 'Autódromo José Carlos Pace' }
-  ];
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        // En 2026, esto se obtiene del backend (proviene del data_pipeline)
+        const response = await axios.get(`${API_URL}/status/connection`);
+        
+        // Asumiendo que el backend nos da los circuitos válidos procesados
+        if (response.data.available_circuits) {
+          setCircuits(response.data.available_circuits);
+          if (response.data.available_circuits.length > 0) {
+            setCircuit(response.data.available_circuits[0].id);
+          }
+        }
+        
+        // También podríamos inicializar el clima desde el backend
+        if (response.data.current_conditions) {
+          setConditions({
+            airTemp: response.data.current_conditions.air_temp,
+            trackTemp: response.data.current_conditions.track_temp,
+            humidity: response.data.current_conditions.humidity
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch initial metadata:", error);
+      }
+    };
+    fetchMetadata();
+  }, []);
 
   const runPrediction = async () => {
     setLoading(true);
     try {
       const response = await axios.post(`${API_URL}/predict`, {
         circuit_id: circuit,
-        driver_id: 14, // Default Fernando Alonso
-        air_temperature: parseFloat(conditions.airTemp),
-        track_temperature: parseFloat(conditions.trackTemp),
-        humidity: parseFloat(conditions.humidity),
-        telemetry_window: [] // Empty for now
+        driver_id: 14,
+        session_type: "RACE",
+        lap_number: 1,
+        weather: {
+          air_temperature: parseFloat(conditions.airTemp),
+          track_temperature: parseFloat(conditions.trackTemp),
+          humidity: parseFloat(conditions.humidity),
+          wind_speed: 10.0,
+          wind_direction: 180,
+          rainfall: false
+        },
+        car_status: {
+          tyre_compound: "SOFT",
+          tyre_age_laps: 0
+        },
+        telemetry_window: [
+          {
+            timestamp: Date.now(),
+            distance_track: 0,
+            speed: 0,
+            rpm: 0,
+            gear: 1,
+            throttle: 0,
+            brake: 0,
+            active_aero: "Z_MODE",
+            boost_active: false,
+            overtake_mode_active: false,
+            soc: 100.0
+          }
+        ]
       });
       setPrediction(response.data);
     } catch (error) {

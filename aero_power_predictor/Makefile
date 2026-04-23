@@ -36,11 +36,8 @@ run-frontend:
 
 run-all:
 	@echo "🚀 Iniciando sistema completo..."
-	# Ingesta primero (bloqueante para asegurar datos)
-	python -m dagster asset materialize --select "*" -f data_pipeline/setup.py
-	# Backend
-	python backend/main.py &
-	# Frontend
+	dagster asset materialize --select "*" -f data_pipeline/setup.py
+	start /B python backend/main.py
 	cd frontend && npm run dev
 
 clean:
@@ -59,34 +56,34 @@ lint:
 	flake8 core/ backend/ data_pipeline/
 
 setup:
-    @echo "📦 Instalando dependencias de Python y Node..."
-    pip install -r requirements.txt
-    cd frontend && npm install
-    @echo "✅ Setup completado."
+	@echo "📦 Instalando dependencias de Python y Node..."
+	pip install -r requirements.txt
+	cd frontend && npm install
+	@echo "✅ Setup completado."
 
 # 2. Procesamiento de datos (Dagster)
-# Ejecuta la ingesta y creación del grafo antes de que los modelos puedan predecir
+# Abre la UI de Dagster para materializar assets manualmente o programados
 run-pipeline:
-    @echo "🔄 Ejecutando Pipeline de Datos (Dagster)..."
-    dagster asset materialize --select "*" -f data_pipeline/setup.py
+	@echo "🔄 Iniciando Dagster UI en puerto 3001..."
+	dagster dev -f data_pipeline/setup.py -p 3001
 
 # 3. Servicios de Inferencia y Backend
 # Nota: Triton debe estar corriendo (usualmente vía Docker)
 run-services:
-    @echo "🚀 Iniciando API Backend..."
-    python backend/main.py &
+	@echo "🚀 Iniciando API Backend..."
+	python backend/main.py &
 
 # 4. Interfaz de Usuario
 run-ui:
-    @echo "🎨 Iniciando Frontend Next.js..."
-    cd frontend && npm run dev
+	@echo "🎨 Iniciando Frontend Next.js..."
+	cd frontend && npm run dev
 
 # 🔥 EL COMANDO MAESTRO
 # Este comando ejecuta todo en el orden lógico de creación
 dev:
-    @echo "🏁 Arrancando The 2026 Aero-Power Predictor..."
-    $(MAKE) run-pipeline
-    @sleep 5
-    $(MAKE) run-services &
-    @sleep 3
-    $(MAKE) run-ui
+	@echo "🏁 Arrancando The 2026 Aero-Power Predictor..."
+	$(MAKE) run-pipeline
+	@sleep 5
+	$(MAKE) run-services &
+	@sleep 3
+	$(MAKE) run-ui
